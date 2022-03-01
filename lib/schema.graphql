@@ -1,0 +1,85 @@
+enum Level {
+  beginner
+  intermediate
+  advanced
+}
+
+union GlobalSearch = Course | Student | Monitor
+
+type Course {
+  _id: ID!
+  title: String!
+  teacher: String
+  description: String!
+  topic: String @deprecated
+  level: Level
+  people: [Student]
+}
+
+interface Person {
+  _id: ID!
+  name: String!
+  email: String!
+}
+
+type Student implements Person {
+  _id: ID!
+  name: String!
+  email: String!
+  avatar: String
+}
+
+type Monitor implements Person {
+  _id: ID!
+  name: String!
+  email: String!
+  phone: String
+}
+
+type Query {
+  getCourses: [Course]
+  getCourse(id: ID!): Course
+  getPeople: [Person]
+  getPerson(id: ID!): Person
+  searchItems(keyword: String!): [GlobalSearch]
+}
+
+input CourseInput {
+  title: String!
+  teacher: String
+  description: String!
+  topic: String
+  level: Level
+}
+
+input CourseEditInput {
+  title: String
+  teacher: String
+  description: String
+  topic: String
+  level: Level
+}
+
+input PersonInput {
+  name: String!
+  email: String!
+  phone: String
+  avatar: String
+}
+
+input PersonEditInput {
+  name: String
+  email: String
+  phone: String
+  avatar: String
+}
+
+type Mutation {
+  createCourse(input: CourseInput!): Course
+  editCourse(_id: ID!, input: CourseEditInput!): Course
+  deleteCourse(_id: ID!): String
+  createPerson(input: PersonInput!): Person
+  editPerson(_id: ID!, input: PersonEditInput!): Person
+  deletePerson(_id: ID!): String
+  addPeople(courseId: ID!, personId: ID!): Course
+}
